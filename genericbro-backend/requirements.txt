@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+python-dotenv
+supabase
+pydantic
+typing-extensions
+python-multipart
+email-validator
+httpx
+starlette
+python-jose[cryptography]  # For JWT handling if needed
+geopy  # For additional geolocation utilities
