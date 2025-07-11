@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.genericbro"
+    namespace = "com.example.genericbuddy"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
