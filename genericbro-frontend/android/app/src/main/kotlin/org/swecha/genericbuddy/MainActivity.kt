@@ -1,4 +1,4 @@
-package org.swecha.genericbubby
+package org.swecha.genericbuddy
 
 import io.flutter.embedding.android.FlutterActivity
 
