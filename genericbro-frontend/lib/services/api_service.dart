@@ -4,8 +4,8 @@ import '../models/medicine.dart';
 import 'dart:developer' as developer;
 
 class ApiService {
-  static const String baseUrl = 'https://generic-bro.onrender.com/finder';
-  static const String pharmacyBaseUrl = 'https://generic-bro.onrender.com/locator';
+  static const String baseUrl = 'http://192.168.1.27:8000/finder';
+  static const String pharmacyBaseUrl = 'http://192.168.1.27:8000/locator';
   static const int maxRetries = 3;
   static const Duration retryDelay = Duration(seconds: 1);
   static const Duration timeout = Duration(seconds: 10);
