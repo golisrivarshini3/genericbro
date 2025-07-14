@@ -114,8 +114,11 @@ def get_suggestions(field: str, query: Optional[str] = None) -> List[str]:
         table_query = supabase.table(MEDICINES_TABLE).select(field)
         
         if query:
-            cleaned_query = clean_search_value(query)
-            table_query = table_query.ilike(field, f"%{cleaned_query}%")
+            # Make search case-insensitive and match from the start of any word
+            cleaned_query = clean_search_value(query).lower()
+            table_query = table_query.ilike(field, f"%{cleaned_query}%").limit(10)
+        else:
+            table_query = table_query.limit(10)  # Limit results for faster response
         
         response = table_query.execute()
         
@@ -128,7 +131,20 @@ def get_suggestions(field: str, query: Optional[str] = None) -> List[str]:
             if value and isinstance(value, str):
                 suggestions.add(value)
         
-        return sorted(list(suggestions))[:10]  # Limit to 10 suggestions
+        # Sort suggestions by relevance (ones that start with the query first)
+        if query:
+            query_lower = query.lower()
+            sorted_suggestions = sorted(
+                suggestions,
+                key=lambda x: (
+                    not x.lower().startswith(query_lower),  # Exact prefix match first
+                    not any(word.lower().startswith(query_lower) for word in x.split()),  # Word prefix match second
+                    x.lower()  # Alphabetical order last
+                )
+            )
+            return sorted_suggestions
+        
+        return sorted(list(suggestions))  # Return alphabetically sorted if no query
     except Exception as e:
         logger.error(f"Error in get_suggestions: {str(e)}")
         logger.error(traceback.format_exc())

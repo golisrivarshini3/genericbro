@@ -19,10 +19,10 @@ def get_supabase_client():
     try:
         supabase_url = os.getenv("SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_KEY")
-        
+
         if not supabase_url or not supabase_key:
             raise SupabaseConnectionError("Supabase credentials not found in environment")
-            
+
         return create_client(supabase_url, supabase_key)
     except Exception as e:
         raise SupabaseConnectionError(f"Failed to initialize Supabase client: {str(e)}")
