@@ -140,8 +140,8 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
           apiField = field;
       }
 
-      // Add a small delay to prevent too many API calls
-      await Future.delayed(const Duration(milliseconds: 300));
+      // Add a smaller delay to prevent too many API calls
+      await Future.delayed(const Duration(milliseconds: 100));
 
       final suggestions = await ApiService.fetchSuggestions(apiField, pattern);
       developer.log('Got suggestions for $field', error: {
@@ -419,7 +419,7 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
               ),
             ),
             suggestionsCallback: (pattern) async {
-              if (pattern.length < 2) return [];
+              if (pattern.length < 1) return [];
               return await _getSuggestions(pattern, label);
             },
             itemBuilder: (context, String suggestion) {
@@ -480,7 +480,7 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
             keepSuggestionsOnLoading: false,
             hideSuggestionsOnKeyboardHide: true,
             keepSuggestionsOnSuggestionSelected: false,
-            minCharsForSuggestions: 2,
+            minCharsForSuggestions: 1,
           ),
         ],
       ),
