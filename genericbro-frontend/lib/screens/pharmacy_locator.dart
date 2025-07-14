@@ -135,7 +135,7 @@ class _PharmacyLocatorState extends State<PharmacyLocator> {
               ),
             ),
             suggestionsCallback: (pattern) async {
-              if (pattern.length < 1) return [];
+              if (pattern.length < 2) return [];
               try {
                 switch (type) {
                   case 'pincode':
@@ -179,7 +179,7 @@ class _PharmacyLocatorState extends State<PharmacyLocator> {
             hideOnEmpty: true,
             hideOnLoading: true,
             keepSuggestionsOnLoading: false,
-            minCharsForSuggestions: 1,
+            minCharsForSuggestions: 2,
             animationDuration: const Duration(milliseconds: 300),
             transitionBuilder: (context, suggestionsBox, controller) {
               return suggestionsBox;

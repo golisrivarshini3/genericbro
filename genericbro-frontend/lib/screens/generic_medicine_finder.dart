@@ -117,6 +117,7 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
   }
 
   Future<List<String>> _getSuggestions(String pattern, String field) async {
+    // Return cached options immediately if available
     if (pattern.isEmpty) {
       return field == 'type' ? typeOptions : field == 'dosage' ? dosageOptions : [];
     }
@@ -140,7 +141,7 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
           apiField = field;
       }
 
-      // Add a smaller delay to prevent too many API calls
+      // Reduce delay for faster response
       await Future.delayed(const Duration(milliseconds: 100));
 
       final suggestions = await ApiService.fetchSuggestions(apiField, pattern);
@@ -419,7 +420,7 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
               ),
             ),
             suggestionsCallback: (pattern) async {
-              if (pattern.length < 1) return [];
+              if (pattern.length < 2) return [];
               return await _getSuggestions(pattern, label);
             },
             itemBuilder: (context, String suggestion) {
@@ -480,7 +481,7 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
             keepSuggestionsOnLoading: false,
             hideSuggestionsOnKeyboardHide: true,
             keepSuggestionsOnSuggestionSelected: false,
-            minCharsForSuggestions: 1,
+            minCharsForSuggestions: 2,
           ),
         ],
       ),
@@ -1003,6 +1004,100 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
     );
   }
 
+  Widget _buildSuggestionField({
+    required String label,
+    required String hint,
+    required TextEditingController controller,
+    required String field,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: textColor,
+          ),
+        ),
+        const SizedBox(height: 8),
+        TypeAheadField<String>(
+          textFieldConfiguration: TextFieldConfiguration(
+            controller: controller,
+            decoration: InputDecoration(
+              hintText: hint,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: Colors.grey),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: const BorderSide(color: primaryColor),
+              ),
+            ),
+          ),
+          suggestionsCallback: (pattern) => _getSuggestions(pattern, field),
+          itemBuilder: (context, suggestion) {
+            return ListTile(
+              title: Text(
+                suggestion,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: textColor,
+                ),
+              ),
+            );
+          },
+          onSuggestionSelected: (suggestion) {
+            controller.text = suggestion;
+            _searchMedicines();
+          },
+          suggestionsBoxDecoration: SuggestionsBoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            elevation: 4,
+            color: Colors.white,
+          ),
+          noItemsFoundBuilder: (context) => Container(
+            height: 50,
+            alignment: Alignment.center,
+            child: const Text(
+              'No suggestions found',
+              style: TextStyle(
+                fontSize: 14,
+                color: subtitleColor,
+              ),
+            ),
+          ),
+          // Make suggestions more responsive
+          debounceDuration: const Duration(milliseconds: 100),
+          suggestionsBoxVerticalOffset: 8,
+          animationDuration: const Duration(milliseconds: 150),
+          // Show suggestions after typing one character
+          minCharsForSuggestions: 1,
+          hideOnEmpty: false,
+          hideOnLoading: false,
+          keepSuggestionsOnLoading: true,
+          // Increase suggestion box height for better visibility
+          suggestionsBoxController: SuggestionsBoxController(),
+          // Customize loading indicator
+          loadingBuilder: (context) => Container(
+            height: 50,
+            alignment: Alignment.center,
+            child: const SizedBox(
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                valueColor: AlwaysStoppedAnimation<Color>(primaryColor),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1073,8 +1168,18 @@ class _GenericMedicineFinderState extends State<GenericMedicineFinder>
                 Icons.medication,
                 _searchController,
               ),
-              _buildSearchField('Type', Icons.category, _typeController),
-              _buildSearchField('Dosage', Icons.straighten, _dosageController),
+              _buildSuggestionField(
+                label: 'Medicine Type',
+                hint: 'Enter medicine type',
+                controller: _typeController,
+                field: 'Type',
+              ),
+              _buildSuggestionField(
+                label: 'Dosage',
+                hint: 'Enter dosage',
+                controller: _dosageController,
+                field: 'Dosage',
+              ),
               _buildSortingDropdown(),
               _buildSearchButton(),
 
