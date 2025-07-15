@@ -1,6 +1,6 @@
 
 
-<h1 align="center">💊 GenericBuddy – Generic Medicine Finder & Pharmacy Locator</h1>
+<h1 align="center">💊 GenericBro – Generic Medicine Finder & Pharmacy Locator</h1>
 
 <p align="center"><b>A Flutter-powered app to find affordable generic alternatives to branded medicines and locate nearby pharmacies.</b></p>
 
