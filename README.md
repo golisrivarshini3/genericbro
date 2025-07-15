@@ -26,41 +26,18 @@ Make sure you have the following installed:
 
 ---
 
-### ✅ **2. Create the Flutter App**
-
-```bash
-# Create a new Flutter project
-flutter create genericbuddy
-
-# Move into the project directory
-cd genericbuddy
-
-# Add required dependencies (update pubspec.yaml as needed)
-flutter pub add http
-flutter pub add provider
-flutter pub add intl
-flutter pub add shared_preferences
-```
 
 ---
 
-### ✅ **3. Run the App Locally**
+### ✅ **2. Run the App Locally**
 
 ```bash
 # Run on connected device or emulator
 flutter run
 ```
 
-For a specific device:
 
-```bash
-flutter devices      # Lists all devices
-flutter run -d <device_id>
-```
-
----
-
-### ✅ **4. Build APK (Optional)**
+### ✅ **3. Build APK **
 
 ```bash
 # Release build for Android
@@ -71,14 +48,7 @@ flutter build apk --release
 
 ---
 
-### ✅ **5. Backend Deployment (Render)**
 
-1. Create a new **Web Service** in [Render](https://render.com/).  
-2. Push your **backend Dart/Node/Python service** to GitHub.  
-3. Link the repository in Render and deploy.  
-4. Update your API endpoints in the Flutter app (`api_service.dart`).
-
----
 
 ## 💡 Overview
 
